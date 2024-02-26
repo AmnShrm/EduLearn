@@ -13,9 +13,11 @@ dbConnect();
 
 // Routes
 const userRoute = require("./Routes/UserRoute");
+const courseRoute = require("./Routes/CourseRoute");
 
 // Mount routes
 app.use("/api/user", userRoute);
+app.use("/api/v1", courseRoute);
 
 // Live Server
 app.listen(PORT, () => {
