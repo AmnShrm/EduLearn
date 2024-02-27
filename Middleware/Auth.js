@@ -1,9 +1,14 @@
 const jwt = require("jsonwebtoken");
+const User = require("../Models/UserModel");
+
 require("dotenv").config();
 
 exports.auth = (req, res, next) => {
   try {
+    // Fetching Token
     const token = req.body.token || req.cookies.token;
+
+    // Token Missing?
     if (!token) {
       return res.status(401).json({
         success: false,
@@ -12,19 +17,22 @@ exports.auth = (req, res, next) => {
     }
 
     try {
+      // Verify Token
       const decode = jwt.verify(token, process.env.JWT_SECRET);
       req.user = decode;
+      next();
     } catch (err) {
+      console.error("Token Verification Error:", err);
       return res.status(401).json({
         success: false,
         message: "Token is invalid",
       });
     }
-    next();
   } catch (err) {
+    console.error("Authentication Error:", err);
     return res.status(500).json({
       success: false,
-      message: "Something went wrong, while verifying token",
+      message: "Something went wrong while verifying token",
     });
   }
 };
@@ -46,19 +54,19 @@ exports.isBusiness = (req, res, next) => {
   }
 };
 
-exports.isCustomer = (req,res, next) => {
-    try {
-      if (req.user.type != "customer") {
-        return res.status(401).json({
-          success: false,
-          message: "This is the Protected route for Customer",
-        });
-      }
-      next();
-    } catch (err) {
-      return res.status(500).json({
+exports.isCustomer = (req, res, next) => {
+  try {
+    if (req.user.type != "customer") {
+      return res.status(401).json({
         success: false,
-        message: "User type is not matching",
+        message: "This is the Protected route for Customer",
       });
     }
-}
+    next();
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "User type is not matching",
+    });
+  }
+};

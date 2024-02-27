@@ -70,81 +70,73 @@ const generateOTP = () => {
     return OTP;
   }
 };
-
+// Example: Improved error handling and logging
 exports.otpVerify = async (req, res) => {
   try {
+    // Fetching data from user
     const phoneno = req.body.phoneno;
     const clientOTP = req.body.otp;
+
+    // Secret Key
     const secret = process.env.JWT_SECRET;
 
+    // Check for required is Missing
     if (!phoneno || !clientOTP) {
-      res.status(500).json({
+      return res.status(400).json({
         success: false,
-        message: "Required Data Missing",
+        message: "Invalid request. Phone number and OTP are required.",
       });
     }
 
-    let temp = false;
+    // Check for business User
     const business = await Business.findOne({ phoneno });
-    if (business) {
-      temp = true;
-    } else {
-      temp = false;
-    }
-    console.log(secret);
 
-    const user = await User.findOne({ phoneno });
+    // for user
+    let user = await User.findOne({ phoneno });
 
-    if (phoneno == "+911111111111" && user.otp === clientOTP) {
-      user.isVerified = true;
-      await user.save();
-      const token = jwt.sign({ user }, secret);
-      res.cookie("token", token, {
-        httpOnly: true,
+    // Check for User exist with valid OTP
+    if (!user || user.otp !== clientOTP) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid OTP. Please try again.",
       });
-      res.status(200).json({
-        success: true,
-        message: "verified",
-        token,
-        business: temp
-      });
-    }else if( phoneno == "+919999999999" && user.otp === clientOTP) {
-      user.isVerified = true;
-      await user.save();
-      const token = jwt.sign({ user }, secret);
-      res.cookie("token", token, {
-        httpOnly: true,
-      });
-      res.status(200).json({
-        success: true,
-        message: "verified",
-        token,
-      });
-    } else {
-      if( user && user.otp === clientOTP ){
-        user.otp = undefined;
-        user.isVerified = true;
-        await user.save();
-        const token = jwt.sign({ user }, secret);
-        res.cookie("token", token, {httpOnly: true})
-        res.status(200).json({
-          success:true,
-          message: "verified",
-          token,
-        })
-      }else{
-        res.status(400).json({
-          success: false,
-          message: "Invalid OTP. Please try again."
-        })
-      }
     }
+
+    const payload = {
+      phoneno: user.phoneno,
+      id: user._id,
+      role: user.role,
+    };
+
+    // Generate JWT token
+    let token = jwt.sign(payload, secret, {
+      expiresIn: "2h",
+    });
+
+    // Update user verification status
+    user.token = token;
+    user.isVerified = true;
+
+    await user.save();
+
+    // for cookie
+    const options = {
+      expires: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+      httpOnly: true,
+    };
+
+    // Set the token in a secure, HTTP-only cookie - Success
+    res.cookie("token", token, options).status(200).json({
+      success: true,
+      message: "User verified successfully.",
+      user,
+      business: !!business, // Boolean representation of business existence
+    });
   } catch (err) {
     console.error("Error verifying OTP", err);
     res.status(500).json({
-      success:false,
-      message: "Failed to verify OTP."
-    })
+      success: false,
+      message: "Failed to verify OTP.",
+    });
   }
 };
- 
