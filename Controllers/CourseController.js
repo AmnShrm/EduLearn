@@ -42,7 +42,6 @@ exports.createCourse = async (req, res) => {
       });
     }
 
-
     const course = new Course({
       courseId,
       courserOwner,
@@ -73,12 +72,37 @@ exports.createCourse = async (req, res) => {
   }
 };
 
-exports.getAllCourse = async (req, res, next) => {
+exports.getAllCourse = async (req, res) => {
   try {
     const courses = await Course.find({});
     return res.status(200).json({
       success: true,
       data: courses,
+      message: "Data Fetched Successfully",
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+exports.getCourseById = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const course = await Course.findOne({ courseId });
+
+    if (!course) {
+      return res.status(404).json({
+        success: false,
+        message: "No Data Found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: course,
       message: "Data Fetched Successfully",
     });
   } catch (err) {

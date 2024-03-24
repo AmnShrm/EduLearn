@@ -70,7 +70,8 @@ const generateOTP = () => {
     return OTP;
   }
 };
-// Example: Improved error handling and logging
+
+
 exports.otpVerify = async (req, res) => {
   try {
     // Fetching data from user

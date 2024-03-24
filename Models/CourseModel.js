@@ -7,6 +7,7 @@ const courseSchema = new mongoose.Schema(
     },
     courserOwner: {
       type: String,
+      required: true,
     },
     title: {
       type: String,
@@ -44,7 +45,7 @@ const courseSchema = new mongoose.Schema(
     courseLevel: {
       type: String,
       enum: ["beginner", "intermediate", "expert"],
-      defualt: "begineer",
+      defualt: "beginner",
     },
     description: {
       type: String,
