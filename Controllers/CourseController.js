@@ -74,7 +74,7 @@ exports.createCourse = async (req, res) => {
 
 exports.getAllCourse = async (req, res) => {
   try {
-    const courses = await Course.find({});
+    const courses = await Course.find({}).select('courseId ratingByFive title courserOwner courseType courseAmount durationWeeks');
     return res.status(200).json({
       success: true,
       data: courses,

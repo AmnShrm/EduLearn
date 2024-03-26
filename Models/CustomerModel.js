@@ -16,7 +16,7 @@ const CustomerSchema = mongoose.Schema(
       type: String,
     },
     phoneno: {
-      type: String,
+      type: Number,
       trim: true,
       required: true,
       unique: true,
