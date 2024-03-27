@@ -21,12 +21,14 @@ const userRoute = require("./Routes/UserRoute");
 const courseRoute = require("./Routes/CourseRoute");
 const ongoingStatusRoute = require("./Routes/OngoingStatusRoute");
 const customerRoute = require("./Routes/CustomerRoute");
+const categoryRoute = require("./Routes/CategoryRoute");
 
 // Mount routes
 app.use("/api/user", userRoute);
 app.use("/api/v1", courseRoute);
 app.use("/api/v1", ongoingStatusRoute);
 app.use("/api/v1", customerRoute);
+app.use("/api/v1", categoryRoute);
 
 // Live Server
 app.listen(PORT, () => {
