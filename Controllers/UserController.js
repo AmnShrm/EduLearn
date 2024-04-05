@@ -117,6 +117,7 @@ exports.otpVerify = async (req, res) => {
     // Update user verification status
     user.token = token;
     user.isVerified = true;
+    user.otp = undefined;
 
     await user.save();
 
