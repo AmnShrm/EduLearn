@@ -22,13 +22,15 @@ const courseRoute = require("./Routes/CourseRoute");
 const ongoingStatusRoute = require("./Routes/OngoingStatusRoute");
 const customerRoute = require("./Routes/CustomerRoute");
 const categoryRoute = require("./Routes/CategoryRoute");
+const subCategoryRoute = require("./Routes/SubCategoryRoute");
 
-// Mount routes
+// Mount routes 
 app.use("/api/user", userRoute);
 app.use("/api/v1", courseRoute);
 app.use("/api/v1", ongoingStatusRoute);
 app.use("/api/v1", customerRoute);
 app.use("/api/v1", categoryRoute);
+app.use("/api/v1", subCategoryRoute);
 
 // Live Server
 app.listen(PORT, () => {

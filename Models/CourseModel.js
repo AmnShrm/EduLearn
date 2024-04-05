@@ -29,8 +29,14 @@ const courseSchema = new mongoose.Schema(
       type: Number,
     },
     category: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
     },
+    subCategory: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "SubCategory",
+    },
+    
     durationWeeks: {
       type: Number,
     },

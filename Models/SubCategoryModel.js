@@ -14,6 +14,11 @@ const SubCategorySchema = new mongoose.Schema(
         type: String,
       },
     ],
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+    },
+    
     popularTopics: [
       {
         type: String,
@@ -29,4 +34,4 @@ const SubCategorySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Subcategory", SubCategorySchema);
+module.exports = mongoose.model("SubCategory", SubCategorySchema);

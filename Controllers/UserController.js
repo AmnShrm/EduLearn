@@ -111,7 +111,7 @@ exports.otpVerify = async (req, res) => {
 
     // Generate JWT token
     let token = jwt.sign(payload, secret, {
-      expiresIn: "2h",
+      expiresIn: "48h",
     });
 
     // Update user verification status
@@ -123,7 +123,7 @@ exports.otpVerify = async (req, res) => {
 
     // for cookie
     const options = {
-      expires: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+      expires: new Date(Date.now() + 48 * 24 * 60 * 60 * 1000),
       httpOnly: true,
     };
 
