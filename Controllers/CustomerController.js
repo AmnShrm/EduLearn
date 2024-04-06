@@ -17,7 +17,6 @@ exports.createCustomer = async (req, res) => {
       });
     }
 
-    
     const existEmail = await Customer.findOne({ email });
     const existPhone = await Customer.findOne({ phoneno });
 
@@ -64,6 +63,39 @@ exports.createCustomer = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Internal Server Error",
+    });
+  }
+};
+
+exports.getCustomer = async (req, res) => {
+  try {
+
+    // Get the phone no from User
+    const {phoneno} = req.user;
+
+    // find the customer 
+    const customer = await Customer.find({ phoneno });
+
+    // if not found 
+    if( !customer) {
+      return res.status(400).json({
+        success: false,
+        message: "Customer does not exist"
+      })
+    }
+
+    // exist Customer
+    return res.status(200).json({
+      success: true,
+      data: customer,
+      message: "Customer Fetched Successfuly",
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: err.message,
     });
   }
 };

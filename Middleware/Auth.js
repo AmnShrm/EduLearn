@@ -39,7 +39,7 @@ exports.auth = (req, res, next) => {
 
 exports.isBusiness = (req, res, next) => {
   try {
-    if (req.user.type != "business") {
+    if (req.user.role != "business") {
       return res.status(401).json({
         success: false,
         message: "This is the Protected route for Seller",
@@ -56,7 +56,7 @@ exports.isBusiness = (req, res, next) => {
 
 exports.isCustomer = (req, res, next) => {
   try {
-    if (req.user.type != "customer") {
+    if (req.user.role != "customer") {
       return res.status(401).json({
         success: false,
         message: "This is the Protected route for Customer",
